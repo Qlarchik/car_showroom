@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+<a href="{{ url_for('home') }}">Home</a>
+<br>
+<a href="{{ url_for('login') }}">Sign In</a>
+<br>
+<a href="{{ url_for('employee_login') }}">Employee workspace</a>
+
+{% block content %}
+    {% if 'user_login' in session %}
+        <h1>Hello, {{ session.get('user')[6] }}</h1>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    {% endif %}
+{% endblock content %}
+</body>
+</html>
