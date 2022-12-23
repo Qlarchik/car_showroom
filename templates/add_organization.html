@@ -10,7 +10,7 @@
 {% block content %}
 <h1>Add organization</h1>
     {% if 'user_login' in session %}
-        {% if session.get('user')[1] == NULL %}
+        {% if session.get('user')[1] == None %}
                 <form action="" method="post">
             <p>
                 <label for="organization_name">Organization name</label>
