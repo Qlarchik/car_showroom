@@ -9,6 +9,7 @@
 <br>
 {% if 'user_login' in session %}
     <a href="{{ url_for('logout') }}">Logout {{ session.get('user')[6] }}</a><br>
+    <a href="{{ url_for('add_organization') }}">Add organization</a><br>
 {% else %}
     <a href="{{ url_for('login') }}">Sign In</a><br>
 {% endif %}
@@ -19,11 +20,13 @@
         <h1>Hello, {{ session.get('user')[2] }}</h1>
     {% endif %}
     <h2>Car list</h2>
-    {% for car in cars %}
-        <a href="{{ url_for('car_page', car_no=car[0]) }}">
-            <img src="{{ url_for('static', filename='car_' + car[2] + '.jpg') }}" alt="Car 1" style="width: 200px; height: 200px;max-width: 300px;max-height: 250px; background-position: center center; background-repeat: no-repeat; object-fit: cover;">
-        </a>
-    {% endfor %}
+    {% if cars != None %}
+        {% for car in cars %}
+            <a href="{{ url_for('car_page', car_no=car[0]) }}">
+                <img src="{{ url_for('static', filename='car_' + car[2] + '.jpg') }}" alt="Car 1" style="width: 200px; height: 200px;max-width: 300px;max-height: 250px; background-position: center center; background-repeat: no-repeat; object-fit: cover;">
+            </a>
+        {% endfor %}
+    {% endif %}
 {% endblock content %}
 </body>
 </html>

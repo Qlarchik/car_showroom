@@ -9,12 +9,13 @@ app.config.update(
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    cars = None
     if request.method == 'GET':
         conn = psycopg2.connect(dbname='car_showroom', user='postgres',
                                 password='12345', host='localhost', port=5432)
         with conn:
             with conn.cursor() as cur:
-                cur.execute('SELECT * FROM car LIMIT 14')
+                cur.execute('SELECT * FROM cars_in_stock LIMIT 14')
                 cars = cur.fetchall()
     return render_template('home.html', cars=cars)
 
@@ -73,6 +74,8 @@ def login():
                     flash('Wrong password')
             else:
                 flash('User does not exist')
+        else:
+            flash('Fill in all fields, please')
     return render_template('login.html')
 
 
@@ -100,7 +103,7 @@ def employee_login():
                     cur.execute('SELECT (password = crypt(%s, password)) AS password FROM employee WHERE username = %s',
                                 (password, username))
                     password_right = cur.fetchone()
-                    cur.execute('SELECT * FROM client WHERE username = %s', (username,))
+                    cur.execute('SELECT * FROM employee WHERE username = %s', (username,))
                     employee = cur.fetchone()
             if password_right is not None:
                 if password_right[0]:
@@ -118,7 +121,28 @@ def employee_login():
 
 @app.route('/employee_workspace/', methods=['GET', 'POST'])
 def employee_workspace():
-    return render_template('employee_workspace.html')
+    emp_requests = None
+    if 'employee_login' in session:
+        if request.method == 'GET':
+            employee_no = session.get('employee')[0]
+            conn = psycopg2.connect(dbname='car_showroom', user='postgres',
+                                    password='12345', host='localhost', port=5432)
+            with conn:
+                with conn.cursor() as cur:
+                    cur.execute('SELECT * FROM request WHERE responsible = %s AND close_time is NULL',
+                                (employee_no,))
+                    emp_requests = cur.fetchall()
+        elif request.method == 'POST':
+            conn = psycopg2.connect(dbname='car_showroom', user='postgres',
+                                    password='12345', host='localhost', port=5432)
+            with conn:
+                with conn.cursor() as cur:
+                    close_request = request.form['submit_button']
+                    request_no = close_request.split(' ')[2]
+                    cur.execute('CALL close_request(%s)',
+                                (request_no,))
+
+    return render_template('employee_workspace.html', emp_requests=emp_requests)
 
 
 @app.route('/employee_logout/', methods=['GET', 'POST'])
@@ -162,6 +186,71 @@ def create_request(client_no, car_no):
     else:
         redirect(url_for('login'))
     return render_template('request_page.html', req=req)
+
+
+@app.route('/add_organization/', methods=['GET', 'POST'])
+def add_organization():
+    if request.method == 'POST':
+        organization_name = request.form.get('organization_name')
+        taxpayer_number = request.form.get('taxpayer_number')
+        registration_code = request.form.get('registration_code')
+        registered_office = request.form.get('registered_office')
+        if organization_name and taxpayer_number and registration_code and registered_office:
+            client_no = session.get('user')[0]
+            conn = psycopg2.connect(dbname='car_showroom', user='postgres',
+                                    password='12345', host='localhost', port=5432)
+            with conn:
+                with conn.cursor() as cur:
+                    cur.execute('CALL add_organization(%s,%s,%s,%s,%s)',
+                                (organization_name, taxpayer_number, registration_code, registered_office, client_no))
+            return redirect(url_for('home'))
+        else:
+            flash('Fill in all fields, please')
+    return render_template('add_organization.html')
+
+
+@app.route('/create_contract/', methods=['GET', 'POST'])
+def create_contract():
+    in_stock = None
+    if request.method == 'POST':
+        sign_date = request.form.get('sign_date')
+        customer = request.form.get('customer')
+        car_no = request.form.get('car_no')
+        doc_type_no = request.form.get('doc_type_no')
+        if sign_date and customer and car_no and doc_type_no:
+            conn = psycopg2.connect(dbname='car_showroom', user='postgres',
+                                    password='12345', host='localhost', port=5432)
+            with conn:
+                with conn.cursor() as cur:
+                    cur.execute('SELECT car_no FROM cars_in_stock WHERE car_no = %s',
+                                (car_no,))
+                    in_stock = cur.fetchone()
+                    if in_stock:
+                        cur.execute('CALL create_contract(%s,%s,%s,%s)',
+                                    (sign_date, customer, car_no, doc_type_no))
+                        return redirect(url_for('employee_workspace'))
+                    else:
+                        flash('Car already sold')
+        else:
+            flash('Fill in all fields, please')
+    return render_template('create_contract.html')
+
+
+@app.route('/appointments/<employee_username>/', methods=['GET', 'POST'])
+def appointments(employee_username):
+    emp_appointments = None
+    if 'employee_login' in session:
+        conn = psycopg2.connect(dbname='car_showroom', user='postgres',
+                                password='12345', host='localhost', port=5432)
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute('SELECT r.appointment, cl.first_name, cl.last_name, cl.phone_num FROM request r '
+                            'JOIN client cl ON r.client_no = cl.client_no '
+                            'WHERE r.appointment IS NOT NULL AND r.responsible = '
+                            '(SELECT employee.employee_no FROM employee WHERE employee.username = %s);',
+                            (employee_username,))
+                emp_appointments = cur.fetchall()
+    return render_template('appointments.html', emp_appointments=emp_appointments)
 
 
 if __name__ == '__main__':

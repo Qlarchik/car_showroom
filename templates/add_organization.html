@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add organization</title>
+</head>
+<body>
+{% extends "home.html" %}
+
+{% block content %}
+<h1>Add organization</h1>
+    {% if 'user_login' in session %}
+        {% if session.get('user')[1] == NULL %}
+                <form action="" method="post">
+            <p>
+                <label for="organization_name">Organization name</label>
+                <label>
+                    <input type="text" name="organization_name">
+                </label>
+            </p>
+            <p>
+                <label for="taxpayer_number">Taxpayer number</label>
+                <label>
+                    <input type="text" name="taxpayer_number">
+                </label>
+            </p>
+            <p>
+                <label for="registration_code">Registration code</label>
+                <label>
+                    <input type="text" name="registration_code">
+                </label>
+            </p>
+            <p>
+                <label for="registered_office">Registered office</label>
+                <label>
+                    <input type="text" name="registered_office">
+                </label>
+            </p>
+            <p>
+                <input type="submit" value="Register">
+            </p>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            </form>
+        {% else %}
+            <p>You already have an organization</p>
+            <a href="{{ url_for('home') }}">Home</a>
+        {% endif %}
+    {% endif %}
+{% endblock content %}
+</body>
+</html>

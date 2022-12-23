@@ -5,9 +5,25 @@
     <title>Employee workspace</title>
 </head>
 <body>
+<a href="{{ url_for('home') }}">Home</a> <br>
 <h1>Employee workspace</h1>
 {% if 'employee_login' in session %}
-    <a href="{{ url_for('employee_logout') }}">Logout</a>
+    <a href="{{ url_for('employee_logout') }}">Logout {{ session.get('employee')[8] }}</a><br>
+    <a href="{{ url_for('create_contract') }}">Create contract</a><br>
+    {% if emp_requests != None %}
+        <a href="{{ url_for('appointments', employee_username=session.get('employee')[8]) }}">My appointments</a>
+        {% for request in emp_requests %}
+            <h3>Request №{{ request[0] }}</h3>
+            <p>Car: {{ request[2] }}</p>
+            <p>Client №{{ request[3] }}</p>
+            <form method="POST" action="">
+            <input type="submit" name="submit_button" value="Close request {{ request[0] }}">
+            </form>
+        {% endfor %}
+    {% else %}
+        <p>You don't have a job, take a break</p>
+        <meta http-equiv="refresh" content="10" >
+    {% endif %}
 {% else %}
     <p>Login to have access</p>
     <a href="{{ url_for('employee_login') }}">Login</a>

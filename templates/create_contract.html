@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create contract</title>
+</head>
+<body>
+{% block content %}
+<a href="{{ url_for('employee_login') }}">Employee workspace</a>
+<h1>Create contract</h1>
+    <form action="" method="post">
+	<p>
+	    <label for="sign_date">Sign date</label>
+        <label>
+            <input type="date" name="sign_date">
+        </label>
+    </p>
+    <p>
+	    <label for="customer">Customer number</label>
+        <label>
+            <input type="text" name="customer">
+        </label>
+    </p>
+    <p>
+	    <label for="car_no">Car number</label>
+        <label>
+            <input type="text" name="car_no">
+        </label>
+    </p>
+    <p>
+	    <label for="doc_type_no">Document type</label>
+        <label>
+            <input type="text" name="doc_type_no">
+        </label>
+    </p>
+	<p>
+	    <input type="submit" value="Create">
+	</p>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    </form>
+{% endblock content %}
+</body>
+</html>

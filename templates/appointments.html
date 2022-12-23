@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Appointments</title>
+</head>
+<body>
+{% block content %}
+    <a href="{{ url_for('home') }}">Home</a><br>
+    <a href="{{ url_for('employee_workspace') }}">Employee workspace</a><br>
+    {% if 'employee_login' in session %}
+        {% if emp_appointments != None %}
+            {% for appointment in emp_appointments %}
+                <h3>Appointment at {{ appointment[0] }}</h3>
+                <p>Client first name: {{ appointment[1] }}</p>
+                <p>Client last name: {{ appointment[2] }}</p>
+                <p>Client phone number: {{ appointment[3] }}</p>
+            {% endfor %}
+        {% endif %}
+    {% else %}
+        <p>Login to have access</p>
+        <a href="{{ url_for('employee_login') }}">Login</a>
+    {% endif %}
+{% endblock content %}
+</body>
+</html>
