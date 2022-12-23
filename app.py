@@ -244,10 +244,7 @@ def appointments(employee_username):
                                 password='12345', host='localhost', port=5432)
         with conn:
             with conn.cursor() as cur:
-                cur.execute('SELECT r.appointment, cl.first_name, cl.last_name, cl.phone_num FROM request r '
-                            'JOIN client cl ON r.client_no = cl.client_no '
-                            'WHERE r.appointment IS NOT NULL AND r.responsible = '
-                            '(SELECT employee.employee_no FROM employee WHERE employee.username = %s);',
+                cur.execute('SELECT * FROM emp_appointment(%s)',
                             (employee_username,))
                 emp_appointments = cur.fetchall()
     return render_template('appointments.html', emp_appointments=emp_appointments)
