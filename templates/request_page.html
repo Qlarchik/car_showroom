@@ -5,6 +5,8 @@
     <title>Request</title>
 </head>
 <body>
+{% extends "home.html" %}
+
 {% block content %}
     {% if 'user_login' in session %}
         <p>Your request is ready, wait for call</p>

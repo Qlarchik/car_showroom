@@ -5,8 +5,9 @@
     <title>Employee login</title>
 </head>
 <body>
+{% extends "employee_workspace.html" %}
+
 {% block content %}
-    <a href="{{ url_for('home') }}">Home</a> <br>
     <h1>Employee login</h1>
     <form action="" method="post">
         <p>

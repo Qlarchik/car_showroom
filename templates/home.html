@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/home.css') }}">
 </head>
 <body>
-<a href="{{ url_for('home') }}">Home</a>
-<br>
-{% if 'user_login' in session %}
-    <a href="{{ url_for('logout') }}">Logout {{ session.get('user')[6] }}</a><br>
-    <a href="{{ url_for('add_organization') }}">Add organization</a><br>
-{% else %}
-    <a href="{{ url_for('login') }}">Sign In</a><br>
-{% endif %}
-<a href="{{ url_for('employee_login') }}">Employee workspace</a>
-
+<ul>
+    <li><a href="{{ url_for('home') }}">Home</a></li>
+    {% if 'user_login' in session %}
+        <li><a href="{{ url_for('logout') }}">Logout {{ session.get('user')[6] }}</a></li>
+        <li><a href="{{ url_for('add_organization') }}">Add organization</a></li>
+    {% else %}
+        <li style="float:right"><a href="{{ url_for('login') }}" class="active">Sign In</a></li>
+    {% endif %}
+    <li><a href="{{ url_for('employee_login') }}">Employee workspace</a></li>
+</ul>
+<div style="margin-top:30px;background-color: darkgray;height:auto;">
 {% block content %}
     {% if 'user_login' in session %}
         <h1>Hello, {{ session.get('user')[2] }}</h1>
@@ -23,10 +25,11 @@
     {% if cars != None %}
         {% for car in cars %}
             <a href="{{ url_for('car_page', car_no=car[0]) }}">
-                <img src="{{ url_for('static', filename='car_' + car[2] + '.jpg') }}" alt="Car 1" style="width: 200px; height: 200px;max-width: 300px;max-height: 250px; background-position: center center; background-repeat: no-repeat; object-fit: cover;">
+                <img src="{{ url_for('static', filename='car_' + car[2] + '.jpg') }}" alt="Car 1" class="car-images">
             </a>
         {% endfor %}
     {% endif %}
 {% endblock content %}
+</div>
 </body>
 </html>
