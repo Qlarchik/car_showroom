@@ -9,12 +9,13 @@
 <ul>
     <li><a href="{{ url_for('home') }}">Home</a></li>
     {% if 'user_login' in session %}
-        <li><a href="{{ url_for('logout') }}">Logout {{ session.get('user')[6] }}</a></li>
+        <li style="float:right"><a href="{{ url_for('logout') }}">Logout {{ session.get('user')[6] }}</a></li>
         <li><a href="{{ url_for('add_organization') }}">Add organization</a></li>
+        <li><a href="{{ url_for('profile') }}">Profile</a></li>
     {% else %}
         <li style="float:right"><a href="{{ url_for('login') }}" class="active">Sign In</a></li>
     {% endif %}
-    <li><a href="{{ url_for('employee_login') }}">Employee workspace</a></li>
+    <li style="background-color: brown"><a href="{{ url_for('employee_login') }}">Employee workspace</a></li>
 </ul>
 <div style="margin-top:30px;background-color: darkgray;height:auto;">
 {% block content %}

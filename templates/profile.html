@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+</head>
+<body>
+{% extends "home.html" %}
+
+{% block content %}
+    {% if 'user_login' in session %}
+        <h1>Profile</h1>
+        <p>Organization: {{ session.get('user')[1] }}</p>
+        <p>First name: {{ session.get('user')[2] }}</p>
+        <p>Last name: {{ session.get('user')[3] }}</p>
+        <p>Phone number: {{ session.get('user')[4] }}</p>
+        <p>E-mail: {{ session.get('user')[5] }}</p>
+        <p>Username: {{ session.get('user')[6] }}</p>
+        <br>
+        <h3>Passport: {{ session.get('user')[8] }}</h3>
+        <p>Date of issue: {{ session.get('user')[9] }}</p>
+        <p>Division code: {{ session.get('user')[10] }}</p>
+        <p>Issued by whom: {{ session.get('user')[11] }}</p>
+        <p>Place of birth: {{ session.get('user')[12] }}</p>
+        <p>Registration address: {{ session.get('user')[13] }}</p>
+    {% else %}
+    {% endif %}
+{% endblock content %}
+</body>
+</html>

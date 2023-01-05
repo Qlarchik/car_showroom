@@ -162,7 +162,13 @@ def car_page(car_no):
                 cur.execute('SELECT * FROM car WHERE car_no = %s',
                             (car_no,))
                 car = cur.fetchone()
-    return render_template('car_page.html', car=car)
+                cur.execute('SELECT * FROM model WHERE model_no = %s',
+                            (car[1],))
+                model = cur.fetchone()
+                cur.execute('SELECT * FROM brand WHERE brand_no = %s',
+                            (model[2],))
+                brand = cur.fetchone()
+    return render_template('car_page.html', car=car, model=model, brand=brand)
 
 
 @app.route('/create_request/<int:car_no>/<int:client_no>/', methods=['GET', 'POST'])
@@ -248,6 +254,11 @@ def appointments(employee_username):
                             (employee_username,))
                 emp_appointments = cur.fetchall()
     return render_template('appointments.html', emp_appointments=emp_appointments)
+
+
+@app.route('/profile/', methods=['GET', 'POST'])
+def profile():
+    return render_template('profile.html')
 
 
 if __name__ == '__main__':

@@ -8,8 +8,6 @@
 {% extends "employee_workspace.html" %}
 
 {% block content %}
-    <a href="{{ url_for('home') }}">Home</a><br>
-    <a href="{{ url_for('employee_workspace') }}">Employee workspace</a><br>
     {% if 'employee_login' in session %}
         {% if emp_appointments != None %}
             {% for appointment in emp_appointments %}

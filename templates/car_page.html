@@ -10,9 +10,14 @@
 {% block content %}
 <h1>Car {{ car[0] }}</h1>
 <img src="{{ url_for('static', filename='car_' + car[2] + '.jpg') }}" alt="Car 1" style="width: auto; height: auto;max-width: 600px;max-height: 600px; background-position: center center; background-repeat: no-repeat;">
-{% for c in car %}
-    <p>{{ c }}</p>
-{% endfor %}
+    <p>Car number: {{ car[0] }}</p>
+    <p>Model: {{ model[1] }}</p>
+    <p>Brand: {{ brand[1] }}</p>
+    <p>VIN: {{ car[2] }}</p>
+    <p>Date of manufacture: {{ car[3] }}</p>
+    <p>Car mileage: {{ car[4] }}</p>
+    <p>Engine power: {{ car[5] }}</p>
+    <p>Price: {{ car[9] }} rub</p>
 {% if 'user_login' in session %}
     <a href="{{ url_for('create_request', client_no=session.get('user')[0], car_no=car[0]) }}">Buy</a>
 {% else %}
