@@ -9,7 +9,11 @@
 <ul>
     <li><a href="{{ url_for('home') }}">Home</a></li>
     {% if 'employee_login' in session %}
-        <li><a href="{{ url_for('employee_logout') }}">Logout {{ session.get('employee')[8] }}</a></li>
+        <li style="float:right"><a href="{{ url_for('employee_logout') }}">Logout {{ session.get('employee')[8] }}</a></li>
+        <li><a href="{{ url_for('create_contract') }}">Create contract</a></li>
+        {% if emp_requests != None %}
+            <li><a href="{{ url_for('appointments', employee_username=session.get('employee')[8]) }}">My appointments</a></li>
+        {% endif %}
     {% endif %}
     <li><a href="{{ url_for('employee_login') }}">Employee workspace</a></li>
 </ul>
@@ -17,10 +21,7 @@
 {% block content %}
 <h1>Employee workspace</h1>
 {% if 'employee_login' in session %}
-    <a href="{{ url_for('employee_logout') }}">Logout {{ session.get('employee')[8] }}</a><br>
-    <a href="{{ url_for('create_contract') }}">Create contract</a><br>
     {% if emp_requests != None %}
-        <a href="{{ url_for('appointments', employee_username=session.get('employee')[8]) }}">My appointments</a>
         {% for request in emp_requests %}
             <h3>Request №{{ request[0] }}</h3>
             <p>Car: {{ request[2] }}</p>
