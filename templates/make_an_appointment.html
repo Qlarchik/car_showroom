@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Make an appointment</title>
+</head>
+<body>
+{% extends "employee_workspace.html" %}
+
+{% block content %}
+<h1>Make an appointment</h1>
+{% if 'employee_login' in session %}
+    {% if emp_requests != None %}
+        {% for request in emp_requests %}
+            <form method="POST" action="">
+                {% if request[6] == None %}
+                    <h3>Request №{{ request[0] }}</h3>
+                    <p>
+                        <label for="appointment">Appointment</label>
+                        <label>
+                            <input type="datetime-local" name="appointment">
+                        </label>
+                    </p>
+                    <p>
+                        <input type="submit" name="appointment_button" value="Make an appointment {{ request[0] }}">
+                    </p>
+                {% endif %}
+            </form>
+        {% endfor %}
+    {% endif %}
+{% else %}
+    <p>Login to have access</p>
+    <a href="{{ url_for('employee_login') }}">Login</a>
+{% endif %}
+{% endblock content %}
+</body>
+</html>

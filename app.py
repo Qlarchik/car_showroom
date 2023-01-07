@@ -133,14 +133,15 @@ def employee_workspace():
                                 (employee_no,))
                     emp_requests = cur.fetchall()
         elif request.method == 'POST':
+            close_request = request.form['submit_button']
             conn = psycopg2.connect(dbname='car_showroom', user='postgres',
                                     password='12345', host='localhost', port=5432)
             with conn:
                 with conn.cursor() as cur:
-                    close_request = request.form['submit_button']
                     request_no = close_request.split(' ')[2]
                     cur.execute('CALL close_request(%s)',
                                 (request_no,))
+            return redirect(url_for('employee_workspace'))
 
     return render_template('employee_workspace.html', emp_requests=emp_requests)
 
@@ -259,6 +260,32 @@ def appointments(employee_username):
 @app.route('/profile/', methods=['GET', 'POST'])
 def profile():
     return render_template('profile.html')
+
+
+@app.route('/make_an_appointment/', methods=['GET', 'POST'])
+def make_an_appointment():
+    emp_requests = None
+    if 'employee_login' in session:
+        if request.method == 'GET':
+            employee_no = session.get('employee')[0]
+            conn = psycopg2.connect(dbname='car_showroom', user='postgres',
+                                    password='12345', host='localhost', port=5432)
+            with conn:
+                with conn.cursor() as cur:
+                    cur.execute('SELECT * FROM request WHERE responsible = %s AND close_time is NULL',
+                                (employee_no,))
+                    emp_requests = cur.fetchall()
+        elif request.method == 'POST':
+            if appointment := request.form['appointment']:
+                conn = psycopg2.connect(dbname='car_showroom', user='postgres',
+                                        password='12345', host='localhost', port=5432)
+                with conn:
+                    with conn.cursor() as cur:
+                        request_no = request.form['appointment_button'].split(' ')[3]
+                        cur.execute('UPDATE request SET appointment = %s WHERE request_no = %s',
+                                    (appointment, request_no))
+            return redirect(url_for('employee_workspace'))
+    return render_template('make_an_appointment.html', emp_requests=emp_requests)
 
 
 if __name__ == '__main__':

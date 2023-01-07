@@ -13,6 +13,7 @@
         <li><a href="{{ url_for('create_contract') }}">Create contract</a></li>
         {% if emp_requests != None %}
             <li><a href="{{ url_for('appointments', employee_username=session.get('employee')[8]) }}">My appointments</a></li>
+            <li><a href="{{ url_for('make_an_appointment') }}">Make an appointment</a></li>
         {% endif %}
     {% endif %}
     <li><a href="{{ url_for('employee_login') }}">Employee workspace</a></li>
@@ -27,7 +28,7 @@
             <p>Car: {{ request[2] }}</p>
             <p>Client №{{ request[3] }}</p>
             <form method="POST" action="">
-            <input type="submit" name="submit_button" value="Close request {{ request[0] }}">
+                <input type="submit" name="submit_button" value="Close request {{ request[0] }}">
             </form>
         {% endfor %}
     {% else %}

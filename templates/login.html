@@ -16,22 +16,22 @@
                 <input type="text" name="username">
             </label>
         </p>
-	<p>
-	    <label for="password">Password</label>
-        <label>
-            <input type="password" name="password">
-        </label>
-    </p>
-	<p>
-	    <input type="submit" value="Sign In">
-	</p>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                {{ message }}
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+        <p>
+            <label for="password">Password</label>
+            <label>
+                <input type="password" name="password">
+            </label>
+        </p>
+        <p>
+            <input type="submit" value="Sign In">
+        </p>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
     </form>
     <a href="{{ url_for('registration') }}">Sign Up</a> <br>
 {% endblock content %}
